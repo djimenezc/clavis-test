@@ -39,7 +39,6 @@ define([
                     })
                 }),
                 erroneous: new TableView({
-                    displaySearch: true,
                     collection: new AncientsCollection({
                     })
                 })

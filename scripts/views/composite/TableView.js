@@ -9,8 +9,9 @@ define([
         /* Return a CompositeView class definition */
         return Backbone.Marionette.CompositeView.extend({
 
-            initialize: function () {
+            initialize: function (opts) {
                 console.log("initialize a TableView CompositeView");
+                this.opts = opts;
             },
 
             template: TableViewTmpl,
@@ -28,16 +29,15 @@ define([
 
             itemView: Backbone.Marionette.ItemView.extend({
                 tagName: 'tr',
-                template: AncientTmpl,
-
-                events: {
-                },
-
-                select : function(e) {
-                    e.preventDefault();
-
-                }
+                template: AncientTmpl
             }),
+
+            serializeData : function() {
+
+                return {
+                    displaySearch : this.opts.displaySearch
+                };
+            },
 
             /* on render callback */
             onRender: function () {
@@ -46,6 +46,7 @@ define([
             refreshCollection : function() {
                 console.log('Refresh collection');
 
+                //$('input[name=search]').val();
                 this.collection.fetch();
             }
         });
