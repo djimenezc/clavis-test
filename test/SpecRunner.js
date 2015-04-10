@@ -28,13 +28,13 @@ require.config({
         text: '../bower_components/requirejs-text/text',
         tmpl: "../templates",
 
-        /* handlebars from the require handlerbars plugin below */
-        handlebars: '../bower_components/require-handlebars-plugin/Handlebars',
+        /* handlebars from the require handlebars plugin below */
+        'hbs/handlebars': '../bower_components/hbs/hbs/handlebars',
 
         /* require handlebars plugin - Alex Sexton */
-        i18nprecompile: '../bower_components/require-handlebars-plugin/hbs/i18nprecompile',
-        json2: '../bower_components/require-handlebars-plugin/hbs/json2',
-        hbs: '../bower_components/require-handlebars-plugin/hbs'
+        'i18nprecompile': '../bower_components/hbs/hbs/i18nprecompile',
+        json2: '../bower_components/hbs/hbs/json2',
+        hbs: '../bower_components/hbs/hbs'
     },
 
     hbs: {

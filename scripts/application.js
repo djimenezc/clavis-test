@@ -2,10 +2,12 @@ define([
         'backbone',
         'communicator',
         'views/layout/TabLayout',
+        'views/composite/TableView',
+        'collections/AncientsCollection',
         'hbs!tmpl/welcome'
     ],
 
-    function (Backbone, Communicator, TabLayout, Welcome_tmpl) {
+    function (Backbone, Communicator, TabLayout, TableView, AncientsCollection, Welcome_tmpl) {
         'use strict';
 
         var welcomeTmpl = Welcome_tmpl;
@@ -21,20 +23,25 @@ define([
             Communicator.mediator.trigger("APP:START");
         });
 
-        App.on("start", function () {
+        App.on('start', function () {
             if (Backbone.history) {
                 Backbone.history.start();
             }
 
             App.views = {
-                good: new Backbone.Marionette.ItemView({
-                    class: 'good'
+                good: new TableView({
+                    collection: new AncientsCollection({
+                    })
                 }),
-                searchable: new Backbone.Marionette.ItemView({
-                    class: 'searchable'
+                searchable: new TableView({
+                    displaySearch: true,
+                    collection: new AncientsCollection({
+                    })
                 }),
-                erroneous: new Backbone.Marionette.ItemView({
-                    class: 'erroneous'
+                erroneous: new TableView({
+                    displaySearch: true,
+                    collection: new AncientsCollection({
+                    })
                 })
             };
 
