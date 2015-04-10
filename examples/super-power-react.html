@@ -1,0 +1,118 @@
+<html>
+<head>
+    <title>React Super Power</title>
+    <script src="https://fb.me/react-0.13.1.js"></script>
+    <script src="https://fb.me/JSXTransformer-0.13.1.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.1/moment.js"></script>
+</head>
+<hr>
+<div id="content"></div>
+<hr></hr>
+<pre>
+    Notes:
+    * search samples:
+        * u -> 2 results
+        * us -> 1 result
+        * usa -> no result
+    * type error to trigger ajax error case
+</pre>
+<script type="text/jsx">
+
+    var Notice = React.createClass({
+        render: function () {
+            return (<b>{this.props.children}</b>);
+        }
+    });
+
+    var Search = React.createClass({
+        render: function () {
+            return (
+                    <div>
+                        <h3>{this.props.children}</h3>
+                        {this.props.superpower} since
+                        <i>{moment(this.props.since).format("DD MMM YYYY")}</i>
+                    </div>
+            );
+        }
+    });
+
+    var SearchList = React.createClass({
+        render: function () {
+            if (Array.isArray(this.props.data)) {
+                var searchNodes = this.props.data.map(function (search) {
+                    return (
+                            <Search superpower={search.superpower} since={search.end_of_an_era}>
+                                {search.name.toUpperCase()}
+                            </Search>
+                    );
+                });
+                return ( <div>{searchNodes}</div> );
+            } else if (this.props.data.notice) {
+                return ( <Notice>{this.props.data.notice}</Notice>);
+            }
+        }
+    });
+
+    var SearchForm = React.createClass({
+        handleSubmit: function (e) {
+            e.preventDefault();
+            var text = React.findDOMNode(this.refs.text).value.trim();
+            this.props.onSearchSubmit({text: text});
+            return;
+        },
+        render: function () {
+            return (
+                    <form>
+                        <input type="text" placeholder="type to filter" ref="text" onChange={this.handleSubmit}/>
+                    </form>
+            );
+        }
+    });
+
+    var SearchBox = React.createClass({
+        handleSearchSubmit: function (search) {
+            var param = '';
+            if (search && search.text) {
+                if (search.text == 'error') {
+                    param = '?error=true';
+                } else {
+                    param = '?search=' + search.text;
+                }
+            }
+            $.ajax({
+                url: 'https://athena-7.herokuapp.com/ancients.json' + param,
+                success: function (data) {
+                    var data = data.ancients ? data.ancients : data;
+                    if (data.length == 0) {
+                        data = {notice: 'Nothing found!!'}
+                    }
+                    this.setState({data: data});
+                }.bind(this),
+                error: function (xhr, status, err) {
+                    this.setState({data: {notice:'ERROR '+xhr.status+': '+ err}});
+                }.bind(this)
+            });
+        },
+        getInitialState: function () {
+            return {data: []};
+        },
+        componentDidMount: function () {
+            this.handleSearchSubmit();
+        },
+        render: function () {
+            return (
+                    <div className="searchBox">
+                        <h1>Super Power</h1>
+                        <SearchForm onSearchSubmit={this.handleSearchSubmit}/>
+                        <Notice data={this.state.data}/>
+                        <SearchList data={this.state.data}/>
+                    </div>
+            );
+        }
+    });
+
+    React.render(<SearchBox/>, document.getElementById('content'));
+</script>
+</body>
+</html>
