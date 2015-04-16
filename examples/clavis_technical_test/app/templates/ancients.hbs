@@ -1,0 +1,32 @@
+{{outlet}}
+
+<div class="well">
+    Below are a list of the ancients. Use the search box to filter!
+</div>
+
+<div class="well">
+  <form class="form-inline">
+      <div class="form-group">
+          <label for="search">Search</label>
+          {{input type="text" value=searchInput placeholder="Zeus" class="form-control"}}
+      </div>
+      <button {{action 'submitSearch'}} class="btn btn-default">Search</button>
+      {{#link-to 'ancients' (query-params search=null)}}<button class="btn btn-default">Show All</button>{{/link-to}}
+  </form>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <ul class="list-group">
+          {{#each ancient in this}}
+            <li class="list-group-item">
+                Name: {{ancient.uppercaseName}}
+                <br/>Superpower: {{ancient.superpower}}
+                <br/>End Of An Era: {{ancient.formattedEndOfEra}}
+            </li>
+          {{else}}
+              <li class="list-group-item">No Results Found</li>
+          {{/each}}
+        </ul>
+    </div>
+</div>
